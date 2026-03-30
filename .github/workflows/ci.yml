@@ -42,7 +42,7 @@ jobs:
       - name: Verificar se a imagem está saudável
         run: |
           # Sobe o container para teste rápido de fumaça (smoke test)
-          docker run -d -p 8001:8001 --name api-check soma-api:latest
+          docker run -d -p 8001:8000 --name api-check soma-api:latest
           sleep 5
           docker ps
           # Verifica se o status está 'healthy' ou se responde 200 OK
