@@ -26,6 +26,6 @@ docker images | findstr soma-api # Windows
 # Criando no modo single stage
 docker run -d -p 8000:8000 --name api-teste <nome-do-usuario-docker>/soma-api:single
 # Criando no modo multi stage
-docker run -d -p 8000:8000 --name api-teste <nome-do-usuario-docker>/soma-api:multi
+docker run -d -p 8001:8000 --name api-teste <nome-do-usuario-docker>/soma-api:multi
 ```
 
