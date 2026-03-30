@@ -36,13 +36,13 @@ jobs:
 
       - name: Build da Imagem Multi-stage
         run: |
-          # Buildando a imagem com a tag latest
-          docker build -t soma-api:latest -f Dockerfile .
+          # Buildando a imagem com a tag multi
+          docker build -t soma-api:multi -f Dockerfile .
 
       - name: Smoke Test (Healthcheck)
         run: |
           # 1. Sobe o container. Mapeamento 8001(host):8000(container)
-          docker run -d -p 8001:8000 --name api-check soma-api:latest
+          docker run -d -p 8001:8000 --name api-check soma-api:multi
           
           # 2. Aguarda o 'start-period' definido no Dockerfile (10s) + um pouco de margem
           echo "Aguardando o Healthcheck estabilizar..."
