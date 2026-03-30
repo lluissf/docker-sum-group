@@ -37,12 +37,12 @@ jobs:
 
       - name: Build da Imagem Multi-stage
         run: |
-          docker build -t soma-api:latest -f Dockerfile .
+          docker build -t soma-api:multi -f Dockerfile .
 
       - name: Verificar se a imagem está saudável
         run: |
           # Sobe o container para teste rápido de fumaça (smoke test)
-          docker run -d -p 8001:8000 --name api-check soma-api:latest
+          docker run -d -p 8001:8000 --name api-check soma-api:multi
           sleep 15
           docker ps
           # Verifica se o status está 'healthy' ou se responde 200 OK
