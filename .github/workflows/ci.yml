@@ -1,6 +1,5 @@
 name: CI Pipeline - Soma API
 
-# Define quando o pipeline será executado
 on:
   push:
     branches: [ "main", "dev" ]
@@ -29,7 +28,7 @@ jobs:
           pytest
 
   build-docker:
-    needs: test # Só builda se os testes passarem
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout do código
@@ -37,13 +36,28 @@ jobs:
 
       - name: Build da Imagem Multi-stage
         run: |
+          # Buildando a imagem com a tag latest
           docker build -t soma-api:latest -f Dockerfile .
 
-      - name: Verificar se a imagem está saudável
+      - name: Smoke Test (Healthcheck)
         run: |
-          # Sobe o container para teste rápido de fumaça (smoke test)
+          # 1. Sobe o container. Mapeamento 8001(host):8000(container)
           docker run -d -p 8001:8000 --name api-check soma-api:latest
-          sleep 5
+          
+          # 2. Aguarda o 'start-period' definido no Dockerfile (10s) + um pouco de margem
+          echo "Aguardando o Healthcheck estabilizar..."
+          sleep 15
+          
+          # 3. Debug: Mostra o status atual e logs se falhar
           docker ps
-          # Verifica se o status está 'healthy' ou se responde 200 OK
-          docker inspect --format='{{json .State.Health.Status}}' api-check | grep "healthy"
+          
+          # 4. Verifica se o status mudou para 'healthy'
+          STATUS=$(docker inspect --format='{{json .State.Health.Status}}' api-check)
+          echo "Status atual: $STATUS"
+          
+          if [[ "$STATUS" != "\"healthy\"" ]]; then
+            echo "❌ Erro: Container não está saudável!"
+            docker logs api-check
+            exit 1
+          fi
+          echo "✅ Container saudável!"
