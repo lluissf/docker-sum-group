@@ -16,6 +16,9 @@ def read_root():
 def get_sum(a: int, b: int):
     return {"result": sum_values(a, b)}
 
+@app.get("/sub/{a}/{b}")
+def get_sub(a: int, b: int):
+    return {"result": a - b}
 
 if __name__ == "__main__":
     import uvicorn
